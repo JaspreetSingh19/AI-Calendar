@@ -20,7 +20,12 @@ class LoginViewSet(viewsets.ModelViewSet):
         request_body=LoginSerializer,
         responses={
             200: openapi.Response('Successful login', LoginSerializer),
-            401: openapi.Response('Unauthorized', LoginSerializer),
+            400: openapi.Response('Bad Request', examples={
+                'application/json': {
+                    'message': 'Bad Request',
+                    'invalid_credentials': ['Invalid Credentials'],
+                }
+            }),
         },
         operation_summary="Authenticate and provide tokens",
         operation_description="This endpoint allows an authenticated user to login and provides access and refresh "

@@ -17,11 +17,21 @@ class RegistrationViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(
         request_body=RegistrationSerializer,
         responses={
-            200: openapi.Response('Successful', RegistrationSerializer),
-            400: openapi.Response('Bad Request', RegistrationSerializer),
+            201: openapi.Response('Created', RegistrationSerializer),
+            400: openapi.Response('Bad Request', examples={
+                'application/json': {
+                    'message': 'Bad Request',
+                    'first_name': ['Invalid first name'],
+                    'last_name': ['Invalid last name'],
+                    'email': ['Invalid email', 'Email already exists'],
+                    'contact': ['Invalid contact', 'Contact already exists'],
+                    'password': ['Invalid password'],
+                    'confirm_password': ['Passwords do not match'],
+                }
+            }),
         },
-        operation_summary="Register an new user",
-        operation_description="This endpoint allows you to register a new user",
+        operation_summary="Register a new user",
+        operation_description="This endpoint allows you to register a new user.",
     )
     def create(self, request, *args, **kwargs):
         """

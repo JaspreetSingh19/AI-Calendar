@@ -181,6 +181,7 @@ SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'aicalendar.urls.apidoc',
     'url': 'http://127.0.0.1:8000/swagger.json',
     'USE_SESSION_AUTH': False,
+    "DEFAULT_MODEL_RENDERING": "example",
 
     'SECURITY_DEFINITIONS': {
         'Bearer': {
@@ -194,3 +195,4 @@ SWAGGER_SETTINGS = {
         'Bearer': []
     }
 }
+

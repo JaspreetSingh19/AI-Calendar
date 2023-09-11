@@ -94,7 +94,12 @@ class MeetingsViewSet(viewsets.ModelViewSet):
         request_body=MeetingsCreateSerializer,
         responses={
             200: openapi.Response('Successful', MeetingsCreateSerializer),
-            400: openapi.Response('Bad Request', MeetingsCreateSerializer),
+            400: openapi.Response('Bad Request', MeetingsCreateSerializer, examples={
+                'application/json': {
+                    'message': 'Bad Request',
+                    'meeting': ['Meeting Conflicts'],
+                }
+            }),
         },
         operation_summary="Create meetings",
         operation_description="This endpoint allows an authenticated user to create meetings",
@@ -118,8 +123,11 @@ class MeetingsViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(
         responses={
             200: openapi.Response(
-                'Successful deletion of a Meeting, {"message": "Meeting deleted"}',
-            ),
+                'Successful deletion of a Meeting', examples={
+                    'application/json': {
+                        'message': 'Meeting Deleted',
+                    }
+                }),
         },
         operation_summary="Delete a Meeting",
         operation_description="This endpoint deletes a Meeting instance by primary key (pk) and returns a success "
