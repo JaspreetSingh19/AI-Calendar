@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
@@ -12,6 +14,15 @@ class RegistrationViewSet(viewsets.ModelViewSet):
     http_method_names = ['post']
     serializer_class = RegistrationSerializer
 
+    @swagger_auto_schema(
+        request_body=RegistrationSerializer,
+        responses={
+            200: openapi.Response('Successful', RegistrationSerializer),
+            400: openapi.Response('Bad Request', RegistrationSerializer),
+        },
+        operation_summary="Register an new user",
+        operation_description="This endpoint allows you to register a new user",
+    )
     def create(self, request, *args, **kwargs):
         """
         creates a new requested user and call the

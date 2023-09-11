@@ -3,6 +3,8 @@ This file contains different ViewSet for 'Meetings'
 The MeetingsViewSet handles CRUD operations for the Meetings model.
 """
 from django.db.models import Q
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -46,6 +48,16 @@ class MeetingsViewSet(viewsets.ModelViewSet):
             return self.serializer_create_class
         return self.serializer_class
 
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(
+                'Successful retrieval of Meetings list',
+                MeetingsListSerializer(many=True),
+            ),
+        },
+        operation_summary="Retrieve a list of Meetings",
+        operation_description="This endpoint retrieves a list of Meetings and returns them as serialized data.",
+    )
     def list(self, request, *args, **kwargs):
         """
         The list retrieves all instances of the Meetings model.
@@ -56,6 +68,17 @@ class MeetingsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(
+                'Successful retrieval of a single Meeting',
+                MeetingsListSerializer(),
+            ),
+        },
+        operation_summary="Retrieve a single Meeting",
+        operation_description="This endpoint retrieves a single Meeting by primary key (pk) and returns it as "
+                              "serialized data.",
+    )
     def retrieve(self, request, *args, **kwargs):
         """
         This method retrieves a single instance of the Meetings model
@@ -67,6 +90,15 @@ class MeetingsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        request_body=MeetingsCreateSerializer,
+        responses={
+            200: openapi.Response('Successful', MeetingsCreateSerializer),
+            400: openapi.Response('Bad Request', MeetingsCreateSerializer),
+        },
+        operation_summary="Create meetings",
+        operation_description="This endpoint allows an authenticated user to create meetings",
+    )
     def create(self, request, *args, **kwargs):
         """
         This method creates a new instance of the Meetings model using validated serializer data
@@ -83,6 +115,16 @@ class MeetingsViewSet(viewsets.ModelViewSet):
                              'data': response_serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(
+                'Successful deletion of a Meeting, {"message": "Meeting deleted"}',
+            ),
+        },
+        operation_summary="Delete a Meeting",
+        operation_description="This endpoint deletes a Meeting instance by primary key (pk) and returns a success "
+                              "message.",
+    )
     def destroy(self, request, *args, **kwargs):
         """
         This method deletes an instance of the Meetings model using the primary key
