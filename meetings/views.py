@@ -2,12 +2,14 @@
 This file contains different ViewSet for 'Meetings'
 The MeetingsViewSet handles CRUD operations for the Meetings model.
 """
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from common.constants import CREATE
 from common.messages import SUCCESS_MESSAGES
+from common.permissions import UserCanDeleteMeeting
 from meetings.models import Meetings
 from meetings.serializers import MeetingsListSerializer, MeetingsCreateSerializer
 
@@ -21,7 +23,7 @@ class MeetingsViewSet(viewsets.ModelViewSet):
     queryset = Meetings
     serializer_class = MeetingsListSerializer
     serializer_create_class = MeetingsCreateSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, UserCanDeleteMeeting)
 
     def get_queryset(self):
         """
@@ -30,7 +32,7 @@ class MeetingsViewSet(viewsets.ModelViewSet):
         :return: Meeting objects
         """
         user = self.request.user.id
-        queryset = self.queryset.objects.filter(from_user=user).order_by('created_at')
+        queryset = self.queryset.objects.filter(Q(from_user=user) | Q(to_user=user)).order_by('created_at')
         return queryset
 
     def get_serializer_class(self):
@@ -76,14 +78,14 @@ class MeetingsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data, context={'user': request.user})
         if serializer.is_valid():
             meeting = serializer.create(serializer.validated_data)
-            response_serializer = self.get_serializer(meeting)
+            response_serializer = self.serializer_class(meeting)
             return Response({'message': SUCCESS_MESSAGES['meeting']['created'],
                              'data': response_serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         """
-        This method deletes an instance of the Employee model using the primary key
+        This method deletes an instance of the Meetings model using the primary key
         It returns a success response with a message after the deletion is complete.
         :return: success response
         """

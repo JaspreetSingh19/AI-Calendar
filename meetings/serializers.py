@@ -59,7 +59,7 @@ class MeetingsCreateSerializer(serializers.ModelSerializer):
         """
         Override create() method to create a new meeting
         """
-        from_user = self.context['user'].id
+        from_user = self.context['user']
 
         meeting = Meetings.objects.create(from_user=from_user, to_user=validated_data['to_user'],
                                           title=validated_data['title'], start_time=validated_data['start_time'],
@@ -72,4 +72,4 @@ class MeetingsCreateSerializer(serializers.ModelSerializer):
         that the MeetingsCreateSerializer should work with
         """
         model = Meetings
-        fields = ['id', 'from_user', 'to_user', 'title', 'start_time', 'end_time', 'created_at', 'updated_at']
+        fields = ['id', 'to_user', 'title', 'start_time', 'end_time', 'created_at', 'updated_at']
