@@ -22,8 +22,12 @@ meetings in it. It also checks other user's meeting before creating a new meetin
 Start the project by following the installation steps.
 For swagger response samples are also added.
 
-* You will get a token in response of login api, you can use this token for authentication,by adding the value in Authorization like "Bearer {token}"
-### Prerequisites
+* You will get a token in response of login api, you can use this token for authorization,by adding the value in Authorization like "Bearer {token}".
+* Foe accessing django admin panel you need to create superuser first by using "python manage.py createsuperuser".
+* You will be asked for email and password. After creating superuser you can go to  http://127.0.0.1:8000/admin/ for login.
+* After login, you can easily see data under 'Users' and 'Meetings'
+
+## Prerequisites
 
 - Python (version 3.9)
 - Django (version 4.2.5)
@@ -58,3 +62,8 @@ python manage.py migrate
 
 # Start the development server
 python manage.py runserver
+
+# Create superuser
+python manage.py createsuperuser
+
+
